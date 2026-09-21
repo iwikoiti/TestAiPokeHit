@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,44 +38,58 @@ fun FilterSheet(
     onApply: (Set<PokemonType>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var localSelection by remember { mutableStateOf(selected) }
+    var localSelection by remember(selected) { mutableStateOf(selected) }
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp)
+                .heightIn(max = 600.dp)
         ) {
             Text(
                 text = stringResource(R.string.filter_title),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
-            Spacer(Modifier.height(8.dp))
-            PokemonType.entries.forEach { type ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            localSelection =
-                                if (type in localSelection) localSelection - type else localSelection + type
-                        }
-                        .padding(vertical = 2.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = type in localSelection,
-                        onCheckedChange = { checked ->
-                            localSelection =
-                                if (checked) localSelection + type else localSelection - type
-                        }
-                    )
-                    TypeChip(type)
+            Spacer(Modifier.height(4.dp))
+
+            // Список типов занимает доступное место и скроллится,
+            // чтобы кнопки внизу всегда оставались на экране.
+            Column(
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                PokemonType.entries.forEach { type ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                localSelection =
+                                    if (type in localSelection) localSelection - type else localSelection + type
+                            }
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = type in localSelection,
+                            onCheckedChange = { checked ->
+                                localSelection =
+                                    if (checked) localSelection + type else localSelection - type
+                            }
+                        )
+                        TypeChip(type)
+                    }
                 }
             }
-            Spacer(Modifier.height(16.dp))
+
+            Spacer(Modifier.height(8.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TextButton(onClick = { localSelection = emptySet() }) {
