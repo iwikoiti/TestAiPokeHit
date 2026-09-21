@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">PokeHit</string>
+    <string name="tab_home">Главная</string>
+    <string name="tab_favorites">Избранное</string>
+    <string name="search_hint">Поиск покемона</string>
+    <string name="clear_search">Очистить поиск</string>
+    <string name="filter">Фильтр по типам</string>
+    <string name="filter_title">Выберите типы</string>
+    <string name="reset_all">Сбросить всё</string>
+    <string name="apply">Применить</string>
+    <string name="back">Назад</string>
+    <string name="add_favorite">Добавить в избранное</string>
+    <string name="remove_favorite">Убрать из избранного</string>
+    <string name="section_physical">Физические характеристики</string>
+    <string name="section_stats">Базовые характеристики</string>
+    <string name="section_abilities">Способности</string>
+    <string name="section_gallery">Галерея</string>
+    <string name="section_description">Описание</string>
+    <string name="height_label">Рост</string>
+    <string name="weight_label">Вес</string>
+    <string name="base_experience_label">Базовый опыт</string>
+    <string name="favorites_empty">Нет избранных покемонов.\nДобавьте их с главного экрана.</string>
+    <string name="no_results">Покемоны не найдены</string>
+    <string name="error_loading">Не удалось загрузить данные.\nПроверьте подключение к интернету.</string>
+    <string name="retry">Повторить</string>
+    <string name="unit_meters">м</string>
+    <string name="unit_kilograms">кг</string>
+</resources>
