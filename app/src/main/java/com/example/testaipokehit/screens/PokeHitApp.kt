@@ -10,6 +10,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,12 +37,26 @@ private object Route {
     const val DETAIL = "pokemon"
 }
 
+/**
+ * @param initialPokemonId покемон для прямого открытия (переход из виджета);
+ *        `null` — обычный запуск с главного экрана.
+ */
 @Composable
-fun PokeHitApp() {
+fun PokeHitApp(initialPokemonId: Int? = null) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = currentRoute == Route.HOME || currentRoute == Route.FAVORITES
+
+    LaunchedEffect(initialPokemonId) {
+        if (initialPokemonId != null) {
+            val route = "${Route.DETAIL}/$initialPokemonId"
+            // Повторный переход не нужен: экран уже открыт (например, после поворота экрана).
+            if (navController.currentDestination?.route != route) {
+                navController.navigate(route) { launchSingleTop = true }
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {

@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Виджет «Случайный покемон»: своя палитра, т.к. RemoteViews не читает тему Compose. -->
+    <color name="widget_background">#FFFBFE</color>
+    <color name="widget_text_primary">#1C1B1F</color>
+    <color name="widget_text_secondary">#49454F</color>
+    <color name="widget_pokeball_top">#B9A7F0</color>
+    <color name="widget_pokeball_bottom">#D0BCFF</color>
+    <color name="widget_icon_ripple">#336750A4</color>
 </resources>

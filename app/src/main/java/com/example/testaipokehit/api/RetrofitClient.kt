@@ -10,7 +10,8 @@ object RetrofitClient {
 
     private const val BASE_URL = "https://pokeapi.co/api/v2/"
 
-    private val okHttpClient: OkHttpClient by lazy {
+    /** Клиент используется и виджетом — для загрузки арта в обход Compose/Coil. */
+    val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {

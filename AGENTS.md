@@ -4,7 +4,7 @@
 
 ## Текущее состояние
 
-Приложение **реализовано полностью** по ТЗ ниже. Git-репозиторий инициализирован, первый коммит сделан. GitHub-remote не добавлен (требует учётку пользователя). Все слои в пакете `com.example.testaipokehit`: `api/`, `model/`, `database/`, `repository/`, `mvi/`, `viewmodel/`, `screens/`, а также `di/` (ручной DI-контейнер `AppContainer`, держится в `PokeHitApplication`).
+Приложение **реализовано полностью** по ТЗ ниже, плюс виджет рабочего стола «Случайный покемон» (пакет `widget/`). Git-репозиторий инициализирован, первый коммит сделан. GitHub-remote не добавлен (требует учётку пользователя). Все слои в пакете `com.example.testaipokehit`: `api/`, `model/`, `database/`, `repository/`, `mvi/`, `viewmodel/`, `screens/`, `widget/`, а также `di/` (ручной DI-контейнер `AppContainer`, держится в `PokeHitApplication`).
 
 ## Стек (факт, проверено сборкой)
 
@@ -27,12 +27,24 @@
 - Избранное: `FavoriteDao.observeFavoriteIds()` → `Flow<List<Int>>`, обновление на главном/детальном/избранном экранах через стандартный коллектор (инструментальный сброс `distinctUntilChanged` — на экране «Избранное»).
 - Детали: официальный арт (official-artwork) + галерея (home, shiny), статы, способности, рост в «м», вес в «кг».
 
+## Виджет «Случайный покемон» (`widget/`)
+
+- `RandomPokemonWidgetProvider` (AppWidgetProvider + RemoteViews, без Compose/Glance): id выбирается из диапазона **1–1010** (`RandomPokemonIds`) — от Bulbasaur до Iron Leaves; у всех есть `official-artwork`.
+- Тап по виджету → broadcast `com.example.testaipokehit.action.SHUFFLE_POKEMON` → новый случайный покемон; тап по иконке «i» → `MainActivity` с extra `EXTRA_POKEMON_ID` → сразу карточка покемона (`PokeHitApp(initialPokemonId)`).
+- Состояние виджета (id + имя) — в SharedPreferences `random_pokemon_widget`, чтобы перерисовка при повороте/изменении размера не меняла покемона; очищается в `onDeleted`.
+- Данные для виджета — `PokemonRepository.getPokemonSummary(id)` (один запрос `/pokemon/{id}`, без species) → `model/PokemonSummary`.
+- Картинку виджет грузит не Coil, а `PokemonArtworkLoader`: OkHttp + `LruCache` (8 МБ) + PNG в `cacheDir/widget_artwork` (максимум 24 файла, подрезка по `lastModified`). Запасной URL арта — `sprites/pokemon/other/official-artwork/{id}.png` (без сегмента `other/` PokeAPI отдаёт 404).
+- Отрисовка двухфазная: сначала мгновенно текст + pokeball-плейсхолдер, затем `goAsync()` + корутина с `withTimeout(8 c)` грузит имя и арт (таймаут меньше системного ~10 c у broadcast). Размер битмапа ограничен 320 px — лимит binder-транзакции при передаче в хост-процесс.
+- Палитра виджета — своя (`res/values/colors.xml` + `values-night/colors.xml`), т.к. RemoteViews не читает тему Compose.
+
 ## Сборка и тесты (Windows)
 
 - `JAVA_HOME` на хосте не задан — задавайте вручную: `$env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'` (JBR Android Studio) перед `.\gradlew.bat`.
 - Debug APK: `.\gradlew.bat :app:assembleDebug`
 - Unit-тесты (JUnit4, `app/src/test`): `.\gradlew.bat :app:testDebugUnitTest`
 - Инструментальные тесты (`app/src/androidTest`) требуют устройство/эмулятор: `.\gradlew.bat :app:connectedDebugAndroidTest`
+- На этом хосте задача `connectedDebugAndroidTest` может упасть с `INSTALL_FAILED_USER_RESTRICTED` (тестовый APK помечен `testOnly`). Обход: `adb install -r -t app\build\outputs\apk\androidTest\debug\app-debug-androidTest.apk` и `adb shell am instrument -w -r -e class <FQCN> com.example.testaipokehit.test/androidx.test.runner.AndroidJUnitRunner`.
+- `adb shell uiautomator dump` на подключённом MIUI-устройстве падает с «could not get idle state» — для проверки UI используйте OkHttp-логи (`adb logcat --pid=<pid>`, тег `okhttp.OkHttpClient`) либо инструментальные тесты.
 
 ## Особенности сборки (AGP 9.4 / Gradle 9.6, не менять без причины)
 
@@ -48,4 +60,5 @@
 - Все ресурсные строки UI — в `app/src/main/res/values/strings.xml`. Язык UI — русский; имена покемонов, типов и способностей — английские (канонические, как в PokeAPI).
 - Тема — `TestAiPokeHitTheme` в `ui/theme/` (Material3, динамический цвет на Android 12+).
 - Новые экраны: Intent/State в `mvi/`, ViewModel в `viewmodel/` + Factory в `AppViewModelFactories.kt`, экран в `screens/`; общие UI-компоненты — в `screens/common/`.
+- Виджеты: разметка — только RemoteViews-совместимые вьюхи (`LinearLayout`/`ImageView`/`TextView`), вся логика — в `widget/`; вьюхи не поддерживают тему Compose, поэтому цвета виджета задаются ресурсами.
 - Room-схему менять через версию БД и миграцию (`app/src/main/java/.../database/AppDatabase.kt`).

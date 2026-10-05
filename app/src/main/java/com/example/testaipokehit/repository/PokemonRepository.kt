@@ -8,6 +8,7 @@ import com.example.testaipokehit.database.FavoriteDao
 import com.example.testaipokehit.database.FavoriteEntity
 import com.example.testaipokehit.model.Pokemon
 import com.example.testaipokehit.model.PokemonStat
+import com.example.testaipokehit.model.PokemonSummary
 import com.example.testaipokehit.model.PokemonType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -30,6 +31,8 @@ class PokemonRepository(
     private val typeMembersCache = mutableMapOf<PokemonType, List<String>>()
 
     private val detailsCache = mutableMapOf<Int, Pokemon>()
+
+    private val summariesCache = mutableMapOf<Int, PokemonSummary>()
 
     /** Загружает полный список имён покемонов (~1300) порциями. */
     private suspend fun ensureNamesLoaded() = namesMutex.withLock {
@@ -60,6 +63,24 @@ class PokemonRepository(
             val pokemon = dto.toModel(species.englishDescription())
             detailsCache[id] = pokemon
             pokemon
+        }.getOrNull()
+    }
+
+    /**
+     * Краткая карточка для виджета рабочего стола: один запрос к `/pokemon/{id}`,
+     * без species-описания. Имя и адрес арта кэшируются отдельно от полных деталей.
+     */
+    suspend fun getPokemonSummary(id: Int): PokemonSummary? {
+        summariesCache[id]?.let { return it }
+        return runCatching {
+            val dto = api.getPokemon(id)
+            val summary = PokemonSummary(
+                id = dto.id,
+                name = dto.name.toTitleCase(),
+                artworkUrl = dto.sprites.other?.officialArtwork?.frontDefault
+            )
+            summariesCache[id] = summary
+            summary
         }.getOrNull()
     }
 

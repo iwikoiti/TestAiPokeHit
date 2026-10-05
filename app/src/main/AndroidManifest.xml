@@ -26,6 +26,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Виджет рабочего стола «Случайный покемон» -->
+        <receiver
+            android:name=".widget.RandomPokemonWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_random_pokemon_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.testaipokehit.action.SHUFFLE_POKEMON" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_random_pokemon_info" />
+        </receiver>
     </application>
 
 </manifest>
