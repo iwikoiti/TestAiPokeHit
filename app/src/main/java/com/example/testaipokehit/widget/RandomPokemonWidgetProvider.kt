@@ -220,7 +220,7 @@ class RandomPokemonWidgetProvider : AppWidgetProvider() {
         /** Меньше системного таймаута broadcast-приёмника (~10 c). */
         const val LOAD_TIMEOUT_MS = 8_000L
 
-        const val DEFAULT_MIN_WIDTH_DP = 180
+        const val DEFAULT_MIN_WIDTH_DP = 110
         const val DEFAULT_MIN_HEIGHT_DP = 110
         const val MIN_IMAGE_PX = 128
         const val MAX_IMAGE_PX = 320

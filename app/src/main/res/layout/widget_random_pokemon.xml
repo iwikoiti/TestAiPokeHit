@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Разметка виджета «Случайный покемон». Только RemoteViews-совместимые вьюхи:
-     LinearLayout, ImageView, TextView. -->
+<!-- Разметка виджета «Случайный покемон», 1 ячейка по ширине (110dp) и 2 по высоте.
+     Только RemoteViews-совместимые вьюхи: LinearLayout, ImageView, TextView. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -9,7 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,19 +25,19 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:text="@string/widget_random_pokemon_label"
+            android:text="@string/widget_short_label"
             android:textColor="@color/widget_text_secondary"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <ImageView
             android:id="@+id/widget_details"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="4dp"
             android:background="@drawable/widget_icon_background"
             android:clickable="true"
             android:contentDescription="@string/widget_open_details"
-            android:padding="6dp"
+            android:padding="4dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_widget_info" />
     </LinearLayout>
@@ -46,7 +46,7 @@
         android:id="@+id/widget_artwork"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:layout_weight="1"
         android:contentDescription="@string/widget_artwork_description"
         android:scaleType="fitCenter"
@@ -56,14 +56,14 @@
         android:id="@+id/widget_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/widget_loading"
         android:textColor="@color/widget_text_primary"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/widget_hint"
@@ -74,5 +74,5 @@
         android:maxLines="1"
         android:text="@string/widget_hint_shuffle"
         android:textColor="@color/widget_text_secondary"
-        android:textSize="11sp" />
+        android:textSize="10sp" />
 </LinearLayout>

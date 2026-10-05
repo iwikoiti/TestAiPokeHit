@@ -27,8 +27,10 @@
     <string name="unit_kilograms">кг</string>
     <!-- Виджет рабочего стола -->
     <string name="widget_random_pokemon_label">Случайный покемон</string>
+    <!-- Короткая подпись: ширина виджета — 1 ячейка, полное название не влезает. -->
+    <string name="widget_short_label">Случайный</string>
     <string name="widget_random_pokemon_description">Случайный покемон из первых 1010. Нажмите на виджет, чтобы получить другого.</string>
-    <string name="widget_hint_shuffle">Нажмите, чтобы случайный</string>
+    <string name="widget_hint_shuffle">Нажмите — новый</string>
     <string name="widget_loading">Загрузка…</string>
     <string name="widget_error_offline">Нет подключения</string>
     <string name="widget_artwork_description">Арт покемона</string>

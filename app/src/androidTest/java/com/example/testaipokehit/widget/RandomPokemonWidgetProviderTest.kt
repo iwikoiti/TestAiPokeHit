@@ -177,7 +177,7 @@ class RandomPokemonWidgetProviderTest {
         /** Совпадение id возможно, поэтому тап повторяется, пока покемон не сменится. */
         const val MAX_SHUFFLE_ATTEMPTS = 5
         const val SENTINEL_ID = 999
-        const val PREVIEW_DP = 180
+        const val PREVIEW_DP = 110
         const val MAX_PREVIEW_PX = 320
         const val MIN_PREVIEW_COLORS = 8
         const val PREVIEW_FILE = "widget_preview.png"
